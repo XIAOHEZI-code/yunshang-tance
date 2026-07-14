@@ -1,0 +1,214 @@
+<!-- index.wxml - 冶金高炉过程数据分析 首页 -->
+<view class="page-container {{deviceInfo.isDesktop ? 'desktop-layout' : 'mobile-layout'}}">
+  <!-- 页面头部 -->
+  <view class="text-center mb-5 animate-fade-in">
+    <view class="hero-logo-wrap mb-4">
+      <image class="hero-logo" src="/images/furnace.png" mode="aspectFit" />
+    </view>
+    <text class="page-title animate-slide-up">冶金高炉过程数据分析</text>
+    <view class="school-badge animate-slide-up-delay">
+      <image class="school-logo" src="/images/school-logo.png" mode="aspectFit" />
+      <text class="text-normal text-secondary">高炉过程参数采集 · 统计分析 · 碳排放核算</text>
+    </view>
+    
+    <!-- 设备类型显示（调试用） -->
+    <view class="text-small text-tertiary mt-2" wx:if="{{deviceInfo.isDesktop}}">
+      桌面端模式 - {{deviceInfo.platform}} - {{deviceInfo.screenWidth}}x{{deviceInfo.screenHeight}}
+    </view>
+    <view class="text-small text-tertiary mt-2" wx:else>
+      移动端模式 - {{deviceInfo.platform}} - {{deviceInfo.screenWidth}}x{{deviceInfo.screenHeight}}
+    </view>
+  </view>
+
+  <!-- 公告栏 -->
+  <view class="announcement-bar mb-5 animate-fade-in">
+    <view class="announcement-icon">🔥</view>
+    <view class="announcement-text">
+      <text>系统提示：上传高炉过程数据 CSV 文件后，可进行多维度分析，包括原料配比、过程参数统计与碳排放核算。</text>
+    </view>
+  </view>
+
+  <!-- 功能入口卡片 - 桌面端 4列 -->
+  <view class="card-grid mb-6" wx:if="{{deviceInfo.isDesktop}}">
+    <!-- 数据导入 -->
+    <view class="card card-primary shadow-lg rounded-xl p-5 flex flex-col items-center justify-center bg-primary-light border border-border-color-light card-hover" bindtap="navigateToDataParse">
+      <view class="icon-container bg-primary rounded-full p-3 mb-4 animate-pulse">
+        <image class="card-icon-img" src="/images/报告.png" mode="aspectFit" />
+      </view>
+      <text class="font-bold text-primary mb-2 text-lg">数据导入</text>
+      <text class="text-small text-tertiary text-center">上传高炉过程 CSV 数据文件</text>
+      <view class="file-count badge badge-primary mt-3" wx:if="{{uploadedFileCount > 0}}">
+        {{uploadedFileCount}}份文件
+      </view>
+    </view>
+
+    <!-- 数据管理 -->
+    <view class="card shadow-lg rounded-xl p-5 flex flex-col items-center justify-center bg-tertiary border border-border-color-light card-hover" bindtap="navigateToDataStore">
+      <view class="icon-container bg-info rounded-full p-3 mb-4 animate-pulse">
+        <image class="card-icon-img" src="/images/数据.png" mode="aspectFit" />
+      </view>
+      <text class="font-bold text-primary mb-2 text-lg">数据管理</text>
+      <text class="text-small text-tertiary text-center">查看与管理已存储的过程数据</text>
+    </view>
+
+    <!-- 过程分析 -->
+    <view class="card shadow-lg rounded-xl p-5 flex flex-col items-center justify-center bg-tertiary border border-border-color-light card-hover" bindtap="navigateToAnalysis">
+      <view class="icon-container bg-success rounded-full p-3 mb-4 animate-pulse">
+        <image class="card-icon-img" src="/images/分析.png" mode="aspectFit" />
+      </view>
+      <text class="font-bold text-primary mb-2 text-lg">过程分析</text>
+      <text class="text-small text-tertiary text-center">高炉参数统计与特征分析</text>
+    </view>
+
+    <!-- 碳排放计算 -->
+    <view class="card shadow-lg rounded-xl p-5 flex flex-col items-center justify-center bg-tertiary border border-border-color-light card-hover" bindtap="navigateToAnalysis">
+      <view class="icon-container bg-warning rounded-full p-3 mb-4 animate-pulse">
+        <image class="card-icon-img" src="/images/优化.png" mode="aspectFit" />
+      </view>
+      <text class="font-bold text-primary mb-2 text-lg">碳排放核算</text>
+      <text class="text-small text-tertiary text-center">高炉流程碳排放计算</text>
+    </view>
+  </view>
+
+  <!-- 功能入口卡片 - 移动端 2列 -->
+  <view class="card-grid mobile-card-grid mb-6" wx:else>
+    <!-- 数据导入 -->
+    <view class="card card-primary shadow-lg rounded-xl p-5 flex flex-col items-center justify-center bg-primary-light border border-border-color-light card-hover" bindtap="navigateToDataParse">
+      <view class="icon-container bg-primary rounded-full p-3 mb-4 animate-pulse">
+        <image class="card-icon-img" src="/images/报告.png" mode="aspectFit" />
+      </view>
+      <text class="font-bold text-primary mb-2 text-lg">数据导入</text>
+      <text class="text-small text-tertiary text-center">上传高炉 CSV 数据</text>
+      <view class="file-count badge badge-primary mt-3" wx:if="{{uploadedFileCount > 0}}">
+        {{uploadedFileCount}}份
+      </view>
+    </view>
+
+    <!-- 数据管理 -->
+    <view class="card shadow-lg rounded-xl p-5 flex flex-col items-center justify-center bg-tertiary border border-border-color-light card-hover" bindtap="navigateToDataStore">
+      <view class="icon-container bg-info rounded-full p-3 mb-4 animate-pulse">
+        <image class="card-icon-img" src="/images/数据.png" mode="aspectFit" />
+      </view>
+      <text class="font-bold text-primary mb-2 text-lg">数据管理</text>
+      <text class="text-small text-tertiary text-center">查看与管理过程数据</text>
+    </view>
+
+    <!-- 过程分析 -->
+    <view class="card shadow-lg rounded-xl p-5 flex flex-col items-center justify-center bg-tertiary border border-border-color-light card-hover" bindtap="navigateToAnalysis">
+      <view class="icon-container bg-success rounded-full p-3 mb-4 animate-pulse">
+        <image class="card-icon-img" src="/images/分析.png" mode="aspectFit" />
+      </view>
+      <text class="font-bold text-primary mb-2 text-lg">过程分析</text>
+      <text class="text-small text-tertiary text-center">参数统计与特征分析</text>
+    </view>
+
+    <!-- 碳排放核算 -->
+    <view class="card shadow-lg rounded-xl p-5 flex flex-col items-center justify-center bg-tertiary border border-border-color-light card-hover" bindtap="navigateToAnalysis">
+      <view class="icon-container bg-warning rounded-full p-3 mb-4 animate-pulse">
+        <image class="card-icon-img" src="/images/优化.png" mode="aspectFit" />
+      </view>
+      <text class="font-bold text-primary mb-2 text-lg">碳排放核算</text>
+      <text class="text-small text-tertiary text-center">高炉碳排放计算</text>
+    </view>
+  </view>
+
+  <!-- 数据概览 -->
+  <view class="main-content mb-6 animate-fade-in-delay">
+    <view class="flex justify-between items-center mb-4">
+      <text class="page-subtitle">数据概览</text>
+      <text class="text-small text-tertiary">实时统计</text>
+    </view>
+    
+    <!-- 桌面端：4列布局 -->
+    <view class="grid grid-cols-4 gap-4" wx:if="{{deviceInfo.isDesktop}}">
+      <view class="bg-secondary rounded-lg p-4 flex flex-col items-center border border-border-color-light animate-slide-up">
+        <text class="text-xl font-bold text-primary">{{ dataStats.rowCount }}</text>
+        <text class="text-small text-secondary mt-1">数据行数</text>
+      </view>
+      <view class="bg-secondary rounded-lg p-4 flex flex-col items-center border border-border-color-light animate-slide-up-delay">
+        <text class="text-xl font-bold text-primary">{{ dataStats.columnCount }}</text>
+        <text class="text-small text-secondary mt-1">过程参数数</text>
+      </view>
+      <view class="bg-secondary rounded-lg p-4 flex flex-col items-center border border-border-color-light animate-slide-up-delay-2">
+        <text class="text-xl font-bold text-primary">{{ dataStats.tableCount }}</text>
+        <text class="text-small text-secondary mt-1">数据表数量</text>
+      </view>
+      <view class="bg-secondary rounded-lg p-4 flex flex-col items-center border border-border-color-light animate-slide-up-delay-3">
+        <text class="text-sm font-medium text-primary text-center">{{ dataStats.lastUpdated || '无数据' }}</text>
+        <text class="text-small text-secondary mt-1">最后更新</text>
+      </view>
+    </view>
+    
+    <!-- 移动端：2列布局 -->
+    <view class="grid grid-cols-2 gap-4" wx:else>
+      <view class="bg-secondary rounded-lg p-4 flex flex-col items-center border border-border-color-light animate-slide-up">
+        <text class="text-xl font-bold text-primary">{{ dataStats.rowCount }}</text>
+        <text class="text-small text-secondary mt-1">数据行数</text>
+      </view>
+      <view class="bg-secondary rounded-lg p-4 flex flex-col items-center border border-border-color-light animate-slide-up-delay">
+        <text class="text-xl font-bold text-primary">{{ dataStats.columnCount }}</text>
+        <text class="text-small text-secondary mt-1">过程参数数</text>
+      </view>
+      <view class="bg-secondary rounded-lg p-4 flex flex-col items-center border border-border-color-light animate-slide-up-delay-2">
+        <text class="text-xl font-bold text-primary">{{ dataStats.tableCount }}</text>
+        <text class="text-small text-secondary mt-1">数据表数量</text>
+      </view>
+      <view class="bg-secondary rounded-lg p-4 flex flex-col items-center border border-border-color-light animate-slide-up-delay-3">
+        <text class="text-sm font-medium text-primary text-center">{{ dataStats.lastUpdated || '无数据' }}</text>
+        <text class="text-small text-secondary mt-1">最后更新</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近操作记录 -->
+  <view class="recent-activities mb-6 animate-fade-in-delay">
+    <view class="flex justify-between items-center mb-4">
+      <text class="page-subtitle">最近操作</text>
+      <text class="text-small text-tertiary">历史记录</text>
+    </view>
+    
+    <view wx:if="{{recentActivities.length > 0}}">
+      <view wx:for="{{recentActivities}}" wx:key="id" class="activity-item animate-slide-up">
+        <view class="activity-icon">{{item.icon}}</view>
+        <view class="activity-content">
+          <view class="activity-title">{{item.title}}</view>
+          <view class="text-small text-tertiary">{{item.desc}}</view>
+          <view class="activity-time">{{item.time}}</view>
+        </view>
+      </view>
+    </view>
+    
+    <view wx:else class="empty-state">
+      <view class="empty-state-icon"><image class="empty-icon-img" src="/images/furnace.png" mode="aspectFit" /></view>
+      <view class="empty-state-title">暂无操作记录</view>
+      <view class="empty-state-desc">上传高炉过程数据并进行分析，操作记录将显示在这里。</view>
+      <button class="btn btn-primary btn-md" bindtap="navigateToDataParse">
+        <text>立即导入数据</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 快速操作 -->
+  <view class="button-group" wx:if="{{deviceInfo.isDesktop}}">
+    <button class="btn btn-primary btn-lg animate-slide-up" bindtap="navigateToDataParse">
+      <text class="mr-2">📥</text>
+      <text>导入数据</text>
+    </button>
+    <button class="btn btn-success btn-lg animate-slide-up-delay" bindtap="navigateToAnalysis">
+      <text class="mr-2">📊</text>
+      <text>开始分析</text>
+    </button>
+  </view>
+
+  <view class="button-group button-group-vertical mb-5" wx:else>
+    <button class="btn btn-primary btn-lg btn-block animate-slide-up" bindtap="navigateToDataParse">
+      <text class="mr-2">📥</text>
+      <text>导入数据</text>
+    </button>
+    <button class="btn btn-success btn-lg btn-block animate-slide-up-delay" bindtap="navigateToAnalysis">
+      <text class="mr-2">📊</text>
+      <text>开始分析</text>
+    </button>
+  </view>
+
+</view>

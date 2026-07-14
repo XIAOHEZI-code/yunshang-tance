@@ -1,0 +1,19 @@
+<!-- 响应式布局组件，适应不同屏幕尺寸 -->
+<view class="responsive-layout" style="{{containerStyle}}">
+  <!-- 桌面端布局 -->
+  <view wx:if="{{isDesktop}}" class="desktop-layout" style="{{desktopLayoutStyle}}">
+    <slot name="desktop"></slot>
+    <slot></slot>
+  </view>
+  
+  <!-- 移动端布局 -->
+  <view wx:else class="mobile-layout" style="{{mobileLayoutStyle}}">
+    <slot name="mobile"></slot>
+    <slot></slot>
+  </view>
+  
+  <!-- 响应式网格布局 -->
+  <view wx:if="{{useGrid}}" class="grid-container" style="{{gridStyle}}">
+    <slot name="grid"></slot>
+  </view>
+</view>

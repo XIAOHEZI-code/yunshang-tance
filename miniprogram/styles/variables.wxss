@@ -1,0 +1,99 @@
+/* styles/variables.wxss - 全局设计变量定义 - 冶金高炉主题（白色浅色模式） */
+
+page {
+  /* --- 1. 品牌色系 (工业橙 - 冶金主题) --- */
+  --brand-primary: #E85D04;       /* 主品牌色：工业橙（略深以在白底上可读） */
+  --brand-secondary: #D45000;     /* 辅助色：深橙 */
+  --brand-accent: #F48C06;        /* 点缀色：琥珀橙 */
+  
+  --bg-base: #F5F6FA;             /* 页面背景：浅灰白 */
+  --bg-surface: #FFFFFF;          /* 模块背景：纯白 */
+  --bg-card-primary: rgba(255, 255, 255, 0.90); /* 玻璃卡片背景 */
+  --bg-card-secondary: #F0F2F5;
+
+  --bg-elevated: #FFFFFF;         /* 悬浮层/输入框背景 */
+  --bg-glass: rgba(232, 93, 4, 0.04);
+  --bg-glass-hover: rgba(232, 93, 4, 0.08);
+
+  /* --- 2. 文字颜色 --- */
+  --text-primary: #1A1A2E;        /* 主要文字：深铁灰 */
+  --text-secondary: #4A4A5A;      /* 次要文字：中灰 */
+  --text-tertiary: #8C8C9A;       /* 辅助文字：浅灰 */
+  --text-muted: #B0B0BC;          /* 暗文 */
+  --text-brand: #E85D04;          /* 品牌色文字 */
+  
+  --text-success: #2E7D32;
+  --text-warning: #E65100;
+  --text-error: #C62828;
+  --info: #1565C0;
+
+  /* --- 3. 边框与分割线 --- */
+  --border-default: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.05);
+  --border-strong: rgba(0, 0, 0, 0.15);
+  --border-brand: rgba(232, 93, 4, 0.30);
+  --divider: rgba(0, 0, 0, 0.06);
+
+  /* --- 4. 间距系统 (Space) --- */
+  --space-1: 8rpx;
+  --space-2: 16rpx;
+  --space-3: 24rpx;
+  --space-4: 32rpx;
+  --space-5: 40rpx;
+  --space-6: 48rpx;
+  --space-8: 64rpx;
+  --space-10: 80rpx;
+
+  /* --- 5. 圆角系统 (Radius) --- */
+  --radius-md: 12rpx;
+  --radius-lg: 16rpx;
+  --radius-xl: 24rpx;
+  --radius-2xl: 32rpx;
+  --radius-full: 9999rpx;
+
+  /* --- 6. 字体大小 (Text) --- */
+  --text-xs: 20rpx;
+  --text-sm: 24rpx;
+  --text-base: 28rpx;
+  --text-lg: 32rpx;
+  --text-xl: 36rpx;
+  --text-2xl: 40rpx;
+  --text-3xl: 48rpx;
+  --text-4xl: 60rpx;
+  --text-5xl: 80rpx;
+
+  /* --- 7. 字重与行高 --- */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  /* --- 8. 阴影与光晕 (Effects) --- */
+  --shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4rpx 12rpx rgba(0, 0, 0, 0.08), 0 2rpx 4rpx rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10rpx 24rpx rgba(0, 0, 0, 0.10), 0 4rpx 8rpx rgba(0, 0, 0, 0.06);
+  
+  --inner-glow: inset 0 0 20rpx rgba(232, 93, 4, 0.03);
+  --glow-brand: 0 4rpx 16rpx rgba(232, 93, 4, 0.15);
+  --glow-success: 0 4rpx 16rpx rgba(46, 125, 50, 0.15);
+
+  /* --- 9. 渐变 (Gradients) --- */
+  --gradient-brand: linear-gradient(135deg, #E85D04 0%, #D45000 100%);
+  --gradient-hero: linear-gradient(135deg, #E85D04 0%, #F48C06 50%, #D45000 100%);
+  --gradient-card: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 246, 250, 0.98) 100%);
+  --gradient-success: linear-gradient(135deg, #43A047 0%, #2E7D32 100%);
+  --gradient-error: linear-gradient(135deg, #E53935 0%, #C62828 100%);
+  --gradient-steel: linear-gradient(135deg, #ECEFF1 0%, #CFD8DC 50%, #B0BEC5 100%);
+
+  /* --- 10. 动画曲线 --- */
+  --ease-out: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+
+  /* --- 11. 功能色 (用于统计卡片) --- */
+  --success: #43A047;
+  --warning: #F57C00;
+  --info-color: #1565C0;
+}

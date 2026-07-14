@@ -1,0 +1,47 @@
+{
+  "component": true,
+  "usingComponents": {},
+  "options": {
+    "multipleSlots": true,
+    "styleIsolation": "apply-shared",
+    "addGlobalClass": true
+  },
+  "properties": {
+    "useGrid": {
+      "type": "Boolean",
+      "value": false
+    },
+    "containerStyle": {
+      "type": "String",
+      "value": ""
+    },
+    "desktopLayoutStyle": {
+      "type": "String",
+      "value": ""
+    },
+    "mobileLayoutStyle": {
+      "type": "String",
+      "value": ""
+    },
+    "gridStyle": {
+      "type": "String",
+      "value": ""
+    },
+    "forceDesktop": {
+      "type": "Boolean",
+      "value": false
+    },
+    "forceMobile": {
+      "type": "Boolean",
+      "value": false
+    }
+  },
+  "events": {
+    "layoutChange": {
+      "detail": {
+        "isDesktop": "Boolean",
+        "envInfo": "Object"
+      }
+    }
+  }
+}

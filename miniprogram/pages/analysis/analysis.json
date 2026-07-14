@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "数据分析",
+  "usingComponents": {
+    "responsive-layout": "../../components/responsive-layout/responsive-layout",
+    "ec-canvas": "../../components/ec-canvas/ec-canvas"
+  }
+}

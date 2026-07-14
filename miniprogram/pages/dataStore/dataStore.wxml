@@ -1,0 +1,149 @@
+<!-- dataStore.wxml - 数据管理页面（美化版，适配安卓手机） -->
+<view class="page-container">
+  <!-- 页面头部 -->
+  <view class="header-section">
+    <view class="header-icon"><image class="header-icon-img" src="/images/数据.png" mode="aspectFit" /></view>
+    <text class="page-title">数据管理</text>
+    <text class="page-subtitle">查看和管理本地存储的数据</text>
+  </view>
+
+  <!-- 空状态提示 -->
+  <view wx:if="{{ !tableSchema }}" class="empty-state-card">
+    <view class="empty-icon-wrapper">
+      <text class="empty-icon"><image class="empty-icon-img" src="/images/furnace.png" mode="aspectFit" /></text>
+    </view>
+    <text class="empty-title">暂无数据</text>
+    <text class="empty-desc">请先上传并解析 CSV/XLSX 文件</text>
+    <button class="btn-primary" bindtap="navigateToDataParse">
+      <text class="btn-icon">📁</text>
+      <text class="btn-text">去上传文件</text>
+    </button>
+  </view>
+
+  <!-- 有数据状态 -->
+  <block wx:if="{{ tableSchema }}">
+    <!-- 数据概览卡片 -->
+    <view class="overview-card">
+      <view class="card-header">
+        <text class="card-title">📊 数据概览</text>
+        <view class="update-badge" bindtap="refreshData">
+          <text class="update-icon">🔄</text>
+          <text class="update-text">刷新</text>
+        </view>
+      </view>
+      
+      <view class="stats-grid">
+        <view class="stat-item">
+          <view class="stat-icon-wrapper blue">
+            <text class="stat-icon">📋</text>
+          </view>
+          <view class="stat-info">
+            <text class="stat-value">{{ tableSchema.rowCount }}</text>
+            <text class="stat-label">数据行数</text>
+          </view>
+        </view>
+        
+        <view class="stat-item">
+          <view class="stat-icon-wrapper green">
+            <text class="stat-icon">📑</text>
+          </view>
+          <view class="stat-info">
+            <text class="stat-value">{{ tableSchema.columns.length }}</text>
+            <text class="stat-label">数据列数</text>
+          </view>
+        </view>
+        
+        <view class="stat-item full-width">
+          <view class="stat-icon-wrapper purple">
+            <text class="stat-icon">🕐</text>
+          </view>
+          <view class="stat-info">
+            <text class="stat-value-small">{{ tableSchema.updatedAt }}</text>
+            <text class="stat-label">最后更新</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮区域 -->
+    <view class="action-section">
+      <text class="section-title">🛠️ 数据操作</text>
+      <view class="action-grid">
+        <button class="action-btn danger" bindtap="showClearConfirm">
+          <view class="action-btn-icon-wrapper">
+            <text class="action-btn-icon">🗑️</text>
+          </view>
+          <text class="action-btn-text">清空数据</text>
+        </button>
+        
+        <button class="action-btn primary" bindtap="navigateToAnalysis">
+          <view class="action-btn-icon-wrapper">
+            <text class="action-btn-icon"><image class="action-icon-img" src="/images/分析.png" mode="aspectFit" /></text>
+          </view>
+          <text class="action-btn-text">数据分析</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 数据预览卡片 -->
+    <view wx:if="{{ tableData.length > 0 }}" class="preview-card">
+      <view class="card-header">
+        <text class="card-title">👁️ 数据预览</text>
+        <text class="preview-count">共 {{ tableData.length }} 条</text>
+      </view>
+      
+      <!-- 横向滚动表格 -->
+      <scroll-view scroll-x="true" class="table-scroll-view">
+        <view class="data-table-wrapper">
+          <!-- 表头 -->
+          <view class="table-header">
+            <view wx:for="{{ tableSchema.columns }}" wx:key="name" class="th-cell">
+              <text class="th-name">{{ item.name }}</text>
+              <text class="th-type">{{ item.type }}</text>
+            </view>
+          </view>
+          
+          <!-- 数据行 -->
+          <scroll-view scroll-y="true" class="table-body" style="max-height: 400rpx;">
+            <view wx:for="{{ tableData }}" wx:key="index" class="table-row {{ index % 2 === 0 ? 'even' : 'odd' }}">
+              <view wx:for="{{ tableSchema.columns }}" wx:for-item="column" wx:key="name" class="td-cell">
+                <text class="td-value">{{ item[column.name] !== undefined && item[column.name] !== '' ? item[column.name] : '-' }}</text>
+              </view>
+            </view>
+          </scroll-view>
+        </view>
+      </scroll-view>
+      
+      <view class="table-hint">
+        <text class="hint-icon">👆</text>
+        <text class="hint-text">左右滑动查看更多列</text>
+      </view>
+    </view>
+
+    <!-- 列信息卡片 -->
+    <view class="columns-card">
+      <view class="card-header">
+        <text class="card-title">📋 字段信息</text>
+        <text class="columns-count">{{ tableSchema.columns.length }} 个字段</text>
+      </view>
+      
+      <view class="columns-list">
+        <view wx:for="{{ tableSchema.columns }}" wx:key="name" class="column-item">
+          <view class="column-left">
+            <view class="column-index">{{ index + 1 }}</view>
+            <view class="column-info">
+              <text class="column-name">{{ item.name }}</text>
+              <text wx:if="{{ item.primaryKey }}" class="primary-tag">主键</text>
+            </view>
+          </view>
+          <view class="column-type-badge {{ item.type }}">
+            <text class="type-text">{{ item.type }}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部安全区域 -->
+    <view class="safe-area-bottom"></view>
+  </block>
+</view>

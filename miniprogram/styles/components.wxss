@@ -1,0 +1,725 @@
+/* components.wxss - 统一的组件样式定义 */
+
+/* 导入变量 */
+@import './variables.wxss';
+
+/* 按钮样式 */
+.btn {
+  display: inline-block;
+  padding: var(--padding-sm) var(--padding-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-normal) var(--transition-timing);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left var(--transition-slow) var(--transition-timing);
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn-primary {
+  background: var(--primary-gradient);
+  color: white;
+  border-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0088ff 0%, #0066cc 100%);
+  border-color: var(--primary-hover);
+  box-shadow: var(--glow-effect), 0 4px 16px rgba(0, 102, 204, 0.4);
+  transform: translateY(-1rpx);
+}
+
+.btn-primary:active {
+  background: var(--primary-active);
+  border-color: var(--primary-active);
+  box-shadow: 0 1px 4px rgba(0, 102, 204, 0.5);
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+  box-shadow: 0 1px 4px rgba(0, 102, 204, 0.1);
+}
+
+.btn-secondary:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 102, 204, 0.2);
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  color: white;
+  border-color: var(--success-color);
+  box-shadow: 0 2px 8px rgba(0, 200, 83, 0.3);
+}
+
+.btn-success:hover {
+  background-color: #00b34a;
+  border-color: #00b34a;
+  box-shadow: 0 4px 12px rgba(0, 200, 83, 0.4);
+  transform: translateY(-1rpx);
+}
+
+.btn-warning {
+  background-color: var(--warning-color);
+  color: white;
+  border-color: var(--warning-color);
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+}
+
+.btn-warning:hover {
+  background-color: #ff8c00;
+  border-color: #ff8c00;
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+  transform: translateY(-1rpx);
+}
+
+.btn-error {
+  background-color: var(--error-color);
+  color: white;
+  border-color: var(--error-color);
+  box-shadow: 0 2px 8px rgba(255, 61, 0, 0.3);
+}
+
+.btn-error:hover {
+  background-color: #e63900;
+  border-color: #e63900;
+  box-shadow: 0 4px 12px rgba(255, 61, 0, 0.4);
+  transform: translateY(-1rpx);
+}
+
+.btn-disabled {
+  background-color: var(--bg-disabled);
+  color: var(--text-tertiary);
+  border-color: var(--border-color);
+  cursor: not-allowed;
+}
+
+.btn-sm {
+  padding: var(--padding-xs) var(--padding-sm);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+  padding: var(--padding-md) var(--padding-lg);
+  font-size: var(--font-size-lg);
+  border-radius: var(--radius-lg);
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+/* 卡片样式 */
+.card {
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--padding-lg);
+  margin-bottom: var(--margin-md);
+  transition: all var(--transition-normal) var(--transition-timing);
+  border: 1px solid var(--border-color-light);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2rpx;
+  background: var(--primary-gradient);
+  transform: scaleX(0);
+  transition: transform var(--transition-normal) var(--transition-timing);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md), 0 0 20px rgba(0, 102, 204, 0.2);
+  border-color: var(--primary-color);
+  transform: translateY(-2rpx);
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+.card-primary {
+  background: var(--primary-light);
+  border-color: var(--primary-color);
+}
+
+.card-primary:hover {
+  box-shadow: var(--glow-effect), 0 4px 16px rgba(0, 102, 204, 0.4);
+}
+
+.card-header {
+  margin-bottom: var(--margin-md);
+  padding-bottom: var(--padding-sm);
+  border-bottom: 1px solid var(--divider-color);
+}
+
+.card-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--margin-xs);
+}
+
+.card-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.card-body {
+  color: var(--text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+.card-footer {
+  margin-top: var(--margin-md);
+  padding-top: var(--padding-sm);
+  border-top: 1px solid var(--divider-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+}
+
+/* 表单样式 */
+.form {
+  width: 100%;
+}
+
+.form-item {
+  margin-bottom: var(--margin-md);
+}
+
+.form-label {
+  display: block;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--margin-sm);
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--padding-sm) var(--padding-md);
+  font-size: var(--font-size-base);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: border-color var(--transition-normal) var(--transition-timing);
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.form-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.form-input:disabled {
+  background-color: var(--bg-disabled);
+  color: var(--text-tertiary);
+  cursor: not-allowed;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: var(--padding-sm) var(--padding-md);
+  font-size: var(--font-size-base);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: border-color var(--transition-normal) var(--transition-timing);
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 120rpx;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.form-select {
+  width: 100%;
+  padding: var(--padding-sm) var(--padding-md);
+  font-size: var(--font-size-base);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  transition: border-color var(--transition-normal) var(--transition-timing);
+  box-sizing: border-box;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12rpx center;
+  background-size: 24rpx;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.form-error {
+  font-size: var(--font-size-sm);
+  color: var(--error-color);
+  margin-top: var(--margin-xs);
+}
+
+/* 列表样式 */
+.list {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.list-item {
+  padding: var(--padding-md);
+  border-bottom: 1px solid var(--divider-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color var(--transition-normal) var(--transition-timing);
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item:hover {
+  background-color: var(--bg-secondary);
+}
+
+.list-item:active {
+  background-color: var(--bg-tertiary);
+}
+
+.list-item-content {
+  flex: 1;
+}
+
+.list-item-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--margin-xs);
+}
+
+.list-item-description {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.list-item-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-block;
+  padding: var(--padding-xs) var(--padding-sm);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.tag-primary {
+  background-color: rgba(24, 144, 255, 0.1);
+  color: var(--primary-color);
+}
+
+.tag-success {
+  background-color: rgba(82, 196, 26, 0.1);
+  color: var(--success-color);
+}
+
+.tag-warning {
+  background-color: rgba(250, 173, 20, 0.1);
+  color: var(--warning-color);
+}
+
+.tag-error {
+  background-color: rgba(245, 34, 45, 0.1);
+  color: var(--error-color);
+}
+
+.tag-info {
+  background-color: rgba(153, 153, 153, 0.1);
+  color: var(--text-secondary);
+}
+
+/* 加载样式 */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--padding-xl);
+  color: var(--text-secondary);
+}
+
+.loading-spinner {
+  width: 40rpx;
+  height: 40rpx;
+  border: 3rpx solid var(--border-color);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: var(--margin-sm);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 空状态样式 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-xxl);
+  text-align: center;
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  margin: var(--margin-md) 0;
+}
+
+.empty-state-icon {
+  width: 120rpx;
+  height: 120rpx;
+  margin-bottom: var(--margin-md);
+  opacity: 0.5;
+}
+
+.empty-state-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  margin-bottom: var(--margin-sm);
+}
+
+.empty-state-description {
+  font-size: var(--font-size-base);
+  color: var(--text-tertiary);
+  margin-bottom: var(--margin-lg);
+}
+
+/* 弹窗样式 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--z-index-modal);
+}
+
+.modal-content {
+  background-color: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--padding-lg);
+  max-width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  margin-bottom: var(--margin-md);
+  padding-bottom: var(--padding-sm);
+  border-bottom: 1px solid var(--divider-color);
+}
+
+.modal-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.modal-body {
+  margin-bottom: var(--margin-md);
+  color: var(--text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  padding-top: var(--padding-sm);
+  border-top: 1px solid var(--divider-color);
+}
+
+/* 工具类 */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.text-success {
+  color: var(--success-color);
+}
+
+.text-warning {
+  color: var(--warning-color);
+}
+
+.text-error {
+  color: var(--error-color);
+}
+
+.text-info {
+  color: var(--info-color);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.font-normal {
+  font-weight: var(--font-weight-normal);
+}
+
+.mt-1 {
+  margin-top: var(--margin-xs);
+}
+
+.mt-2 {
+  margin-top: var(--margin-sm);
+}
+
+.mt-3 {
+  margin-top: var(--margin-md);
+}
+
+.mt-4 {
+  margin-top: var(--margin-lg);
+}
+
+.mt-5 {
+  margin-top: var(--margin-xl);
+}
+
+.mb-1 {
+  margin-bottom: var(--margin-xs);
+}
+
+.mb-2 {
+  margin-bottom: var(--margin-sm);
+}
+
+.mb-3 {
+  margin-bottom: var(--margin-md);
+}
+
+.mb-4 {
+  margin-bottom: var(--margin-lg);
+}
+
+.mb-5 {
+  margin-bottom: var(--margin-xl);
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.p-1 {
+  padding: var(--padding-xs);
+}
+
+.p-2 {
+  padding: var(--padding-sm);
+}
+
+.p-3 {
+  padding: var(--padding-md);
+}
+
+.p-4 {
+  padding: var(--padding-lg);
+}
+
+.p-5 {
+  padding: var(--padding-xl);
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-1 {
+  gap: var(--spacing-xs);
+}
+
+.gap-2 {
+  gap: var(--spacing-sm);
+}
+
+.gap-3 {
+  gap: var(--spacing-md);
+}
+
+.gap-4 {
+  gap: var(--spacing-lg);
+}
+
+.gap-5 {
+  gap: var(--spacing-xl);
+}
+
+.shadow {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow-md {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.rounded {
+  border-radius: var(--radius-md);
+}
+
+.rounded-lg {
+  border-radius: var(--radius-lg);
+}
+
+.rounded-full {
+  border-radius: var(--radius-full);
+}
+
+.border {
+  border: 1px solid var(--border-color);
+}
+
+.border-t {
+  border-top: 1px solid var(--border-color);
+}
+
+.border-b {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.border-l {
+  border-left: 1px solid var(--border-color);
+}
+
+.border-r {
+  border-right: 1px solid var(--border-color);
+}
+
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}

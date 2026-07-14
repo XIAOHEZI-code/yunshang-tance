@@ -1,0 +1,303 @@
+<!-- analysis.wxml - 冶金高炉过程数据分析页 - 左右分栏设计 -->
+<view class="page-container analysis-page">
+
+  <!-- 页面头部 -->
+  <view class="analysis-header animate-fade-in">
+    <view class="header-left">
+      <image class="header-icon-img" src="/images/分析.png" mode="aspectFit" />
+      <view>
+        <text class="page-title">过程数据分析</text>
+        <text class="text-normal text-secondary">高炉过程参数多维度分析与可视化</text>
+      </view>
+    </view>
+    <view class="header-right" wx:if="{{tableSchema}}">
+      <view class="data-badge">
+        <text class="data-badge-num">{{tableSchema.rowCount}}</text>
+        <text class="data-badge-label">行</text>
+      </view>
+      <view class="data-badge data-badge-col">
+        <text class="data-badge-num">{{tableSchema.columns.length}}</text>
+        <text class="data-badge-label">列</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 无数据空状态 -->
+  <view wx:if="{{!tableSchema}}" class="empty-state-full animate-fade-in">
+    <view class="empty-icon-xl"><image class="empty-icon-img-lg" src="/images/furnace.png" mode="aspectFit" /></view>
+    <text class="empty-state-title">暂无高炉过程数据</text>
+    <text class="empty-state-desc">请先导入 CSV 格式的高炉过程参数文件</text>
+    <button class="btn btn-primary btn-lg" bindtap="navigateToDataParse">
+      <text class="mr-2">📥</text>
+      <text>立即导入数据</text>
+    </button>
+  </view>
+
+  <!-- 主体分栏布局 -->
+  <view wx:else class="analysis-layout animate-fade-in">
+
+    <!-- ===== 左侧配置面板 ===== -->
+    <view class="config-panel glass-card">
+      <view class="panel-header">
+        <text class="panel-title">🔧 分析配置</text>
+        <!-- 移动端折叠按钮 -->
+        <view class="collapse-btn" bindtap="toggleConfigPanel">
+          <text class="text-sm text-brand">{{configCollapsed ? '展开 ▼' : '收起 ▲'}}</text>
+        </view>
+      </view>
+
+      <view class="panel-body {{configCollapsed ? 'collapsed' : ''}}">
+        <!-- 分析类型列表（Radio Group） -->
+        <view class="config-section">
+          <text class="config-label">⚡ 分析类型</text>
+          <view class="analysis-type-list">
+            <view
+              wx:for="{{analysisTypes}}"
+              wx:key="type"
+              class="type-item {{selectedAnalysisIndex == index ? 'type-item-active' : ''}}"
+              bindtap="selectAnalysisType"
+              data-index="{{index}}"
+            >
+              <view class="type-item-dot {{selectedAnalysisIndex == index ? 'dot-active' : ''}}"></view>
+              <view class="type-item-info">
+                <text class="type-item-name">{{item.name}}</text>
+                <text class="type-item-tag" wx:if="{{item.category}}">{{item.category}}</text>
+              </view>
+              <text class="type-item-check" wx:if="{{selectedAnalysisIndex == index}}">✓</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 目标列选择（仅在需要时显示） -->
+        <view class="config-section" wx:if="{{analysisTypes[selectedAnalysisIndex].requiresTarget}}">
+          <text class="config-label">🎯 目标参数列</text>
+          <view class="col-picker-grid">
+            <view
+              wx:for="{{numericalColumns}}"
+              wx:key="index"
+              class="col-chip {{selectedTargetIndex == index ? 'col-chip-active' : ''}}"
+              bindtap="selectTargetColumn"
+              data-index="{{index}}"
+            >
+              <text class="col-chip-text">{{item}}</text>
+            </view>
+            <view wx:if="{{numericalColumns.length == 0}}" class="no-num-cols">
+              <text class="text-sm text-tertiary">无数值列</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 分组字段选择（仅参数分组分析时显示） -->
+        <view class="config-section" wx:if="{{analysisTypes[selectedAnalysisIndex].type === 'parameterGroup'}}">
+          <text class="config-label">📂 分组字段</text>
+          <view class="col-picker-grid">
+            <view
+              wx:for="{{numericalColumns}}"
+              wx:key="index"
+              class="col-chip {{selectedGroupIndex == index ? 'col-chip-active' : ''}}"
+              bindtap="selectGroupColumn"
+              data-index="{{index}}"
+            >
+              <text class="col-chip-text">{{item}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 当前配置摘要 -->
+        <view class="config-summary">
+          <text class="config-summary-title">当前配置</text>
+          <view class="config-summary-row">
+            <text class="config-summary-key">分析类型</text>
+            <text class="config-summary-val text-brand">{{analysisTypes[selectedAnalysisIndex].name}}</text>
+          </view>
+          <view class="config-summary-row" wx:if="{{analysisTypes[selectedAnalysisIndex].requiresTarget}}">
+            <text class="config-summary-key">目标列</text>
+            <text class="config-summary-val">{{numericalColumns[selectedTargetIndex] || '未选'}}</text>
+          </view>
+          <view class="config-summary-row">
+            <text class="config-summary-key">数据行数</text>
+            <text class="config-summary-val">{{tableSchema.rowCount}}</text>
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="config-actions">
+          <button
+            class="btn btn-primary btn-lg w-full"
+            bindtap="runAnalysis"
+            disabled="{{analyzing}}"
+          >
+            <text wx:if="{{analyzing}}">⏳ 分析中...</text>
+            <text wx:else>▶ 开始分析</text>
+          </button>
+          <button
+            class="btn btn-secondary w-full mt-3"
+            bindtap="downloadChart"
+            disabled="{{!analysisResult || downloading}}"
+            wx:if="{{analysisResult}}"
+          >
+            <text class="mr-2">📥</text>
+            <text>{{downloading ? '保存中...' : '保存图表'}}</text>
+          </button>
+        </view>
+      </view>
+    </view>
+
+    <!-- ===== 右侧结果面板 ===== -->
+    <view class="result-panel">
+
+      <!-- 状态透视条 -->
+      <view class="status-bar {{statusBarType}}" wx:if="{{statusBarText}}">
+        <text class="status-bar-icon">{{statusBarIcon}}</text>
+        <view class="status-bar-content">
+          <text class="status-bar-text">{{statusBarText}}</text>
+          <view class="status-progress" wx:if="{{analyzing && totalSteps > 0}}">
+            <view class="progress-track">
+              <view class="progress-fill" style="width: {{(currentStep / totalSteps * 100)}}%;"></view>
+            </view>
+            <text class="progress-label">{{currentStep}}/{{totalSteps}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 空结果提示 -->
+      <view wx:if="{{!analysisResult && !analyzing}}" class="result-placeholder">
+        <text class="placeholder-icon">📈</text>
+        <text class="placeholder-text">在左侧选择分析类型，点击"开始分析"</text>
+        <text class="placeholder-sub">结果图表和详细数据将显示在这里</text>
+      </view>
+
+      <!-- 分析结果区域 -->
+      <view wx:if="{{analysisResult}}" class="result-content animate-fade-in">
+
+        <!-- 摘要卡片栏 -->
+        <view class="summary-cards" wx:if="{{summaryCards.length > 0}}">
+          <view
+            wx:for="{{summaryCards}}"
+            wx:key="label"
+            class="summary-card"
+          >
+            <text class="summary-card-icon">{{item.icon}}</text>
+            <text class="summary-card-val">{{item.value}}</text>
+            <text class="summary-card-label">{{item.label}}</text>
+          </view>
+        </view>
+
+        <!-- 图表区域 -->
+        <view class="chart-section glass-card">
+          <view class="chart-section-header">
+            <text class="section-title">📉 {{chartTitle || '分析图表'}}</text>
+            <view class="chart-action-row">
+              <!-- 相关性分析热力图切换 -->
+              <view
+                wx:if="{{analysisTypes[selectedAnalysisIndex].type === 'correlation' && analysisResult}}"
+                class="chart-toggle-btn"
+                bindtap="toggleCorrelationHeatmap"
+              >
+                <text class="toggle-btn-text">{{showCorrelationHeatmap ? '📊 条形图' : '🟥 热力图'}}</text>
+              </view>
+              <!-- 导出按鈕 -->
+              <view
+                wx:if="{{analysisResult}}"
+                class="chart-export-btn"
+                bindtap="exportResult"
+              >
+                <text class="export-btn-text">📤 导出</text>
+              </view>
+              <!-- 放大按鈕 -->
+              <view
+                wx:if="{{analysisResult}}"
+                class="chart-export-btn"
+                bindtap="onChartClick"
+              >
+                <text class="export-btn-text">🔍 放大</text>
+              </view>
+            </view>
+          </view>
+          <view class="chart-scroll-wrap" style="width: 100%; height: {{isDesktop ? '520rpx' : '420rpx'}}; position: relative;">
+            <ec-canvas id="analysisChart" canvas-id="analysisChart-canvas" ec="{{ ec }}"></ec-canvas>
+          </view>
+        </view>
+
+        <!-- 详细数据（可折叠） -->
+        <view class="detail-section glass-card">
+          <view class="detail-header" bindtap="toggleDetail">
+            <text class="section-title">🗂 详细数据</text>
+            <text class="text-sm text-brand">{{showDetail ? '收起 ▲' : '展开 ▼'}}</text>
+          </view>
+          <view wx:if="{{showDetail}}" class="detail-body animate-fade-in">
+            <!-- 动态表格：适配各分析类型 -->
+            <view wx:if="{{detailTableData.headers && detailTableData.headers.length > 0}}" class="detail-table-container">
+              <scroll-view scroll-x="true" scroll-y="true" style="max-height: {{isDesktop ? '500rpx' : '360rpx'}};">
+                <view class="detail-table">
+                  <!-- 表头 -->
+                  <view class="detail-tr detail-thead">
+                    <view
+                      wx:for="{{detailTableData.headers}}"
+                      wx:key="index"
+                      class="detail-th"
+                    >
+                      <text class="detail-cell-text">{{item}}</text>
+                    </view>
+                  </view>
+                  <!-- 数据行 -->
+                  <view
+                    wx:for="{{detailTableData.rows}}"
+                    wx:key="index"
+                    class="detail-tr {{index % 2 !== 0 ? 'detail-tr-alt' : ''}}"
+                  >
+                    <view
+                      wx:for="{{item}}"
+                      wx:for-item="cell"
+                      wx:key="index"
+                      class="detail-td"
+                    >
+                      <text class="detail-cell-text">{{cell}}</text>
+                    </view>
+                  </view>
+                </view>
+              </scroll-view>
+            </view>
+            <!-- 无详细数据空状态 -->
+            <view wx:else class="detail-empty">
+              <text class="text-sm text-muted">该分析类型暂无可展示的详细数据</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 分析历史 -->
+        <view class="history-section glass-card" wx:if="{{analysisHistory.length > 0}}">
+          <view class="detail-header">
+            <text class="section-title">🕐 分析历史</text>
+            <text class="text-small text-tertiary">{{analysisHistory.length}} 条</text>
+          </view>
+          <view wx:for="{{analysisHistory}}" wx:key="index" class="history-item">
+            <view class="history-item-left">
+              <text class="history-type">{{item.type}}</text>
+              <text class="history-time">{{item.time}}</text>
+            </view>
+            <button class="btn btn-sm btn-primary" bindtap="loadHistoryResult" data-index="{{index}}">查看</button>
+          </view>
+        </view>
+
+      </view>
+    </view>
+  </view>
+
+  <!-- 全屏遮罩 -->
+  <view wx:if="{{isChartMaskVisible}}" class="chart-overlay" bindtap="onMaskClick"></view>
+
+  <!-- 悬浮大图 -->
+  <view wx:if="{{isChartFloating}}" class="floating-chart-wrap">
+    <view class="floating-chart-card">
+      <view class="floating-chart-header">
+        <text class="text-lg font-semibold text-primary">{{chartTitle || '图表详情'}}</text>
+        <button class="btn btn-sm btn-secondary" bindtap="onCloseFloatingChart">✕ 关闭</button>
+      </view>
+      <view style="width: 100%; height: {{isDesktop ? '600rpx' : '500rpx'}}; position: relative;">
+        <ec-canvas id="floating-analysisChart" canvas-id="floating-analysisChart-canvas" ec="{{ floatingEc }}"></ec-canvas>
+      </view>
+    </view>
+  </view>
+
+</view>

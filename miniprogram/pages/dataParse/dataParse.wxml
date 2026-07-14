@@ -1,0 +1,145 @@
+<!-- dataParse.wxml - 冶金高炉数据导入页 -->
+<view class="page-container">
+  <!-- 页面头部 -->
+  <view class="text-center mb-5">
+    <view class="page-title-wrap">
+      <image class="page-title-icon" src="/images/报告.png" mode="aspectFit" />
+      <text> 数据导入</text>
+    </view>
+    <text class="text-normal text-secondary mt-2">上传高炉过程数据 CSV 文件</text>
+  </view>
+
+  <!-- 主内容区 -->
+  <view class="main-content mb-5">
+    <!-- 文件选择区域 -->
+    <view class="mb-5">
+      <view id="dragDropArea" class="bg-secondary rounded-lg p-5 text-center cursor-pointer border-2 border-dashed border-primary" bindtap="onDragDropAreaClick">
+        <image class="upload-area-icon" src="/images/报告.png" mode="aspectFit" />
+        <text class="text-lg font-semibold text-primary mb-2 block">{{ selectedFileName ? '重新选择文件' : '选择 CSV 文件' }}</text>
+        <text class="text-sm text-tertiary mb-1">{{ selectedFileName || '支持 .csv 格式，最大 4MB' }}</text>
+        <text class="text-xs text-tertiary" wx:if="{{ !selectedFileName }}">（电脑端支持拖放文件到此处）</text>
+      </view>
+      
+      <!-- 文件信息 -->
+      <view wx:if="{{ selectedFile }}" class="mt-4 p-4 bg-tertiary rounded-lg">
+        <view class="flex justify-between items-center">
+          <view class="flex-1">
+            <text class="text-sm font-medium text-primary block">{{ selectedFile.name }}</text>
+            <text class="text-xs text-tertiary">{{ formattedFileSize }}</text>
+          </view>
+          <text class="text-sm text-error cursor-pointer" bindtap="clearFile">✕ 清除</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ===== 导入配置区 ===== -->
+    <view class="import-config-card glass-card mb-5">
+      <text class="import-config-title">⚙️ 导入配置</text>
+
+      <!-- 表名输入 -->
+      <view class="config-row">
+        <text class="config-row-label">数据表名</text>
+        <view class="config-row-right">
+          <input
+            class="table-name-input"
+            value="{{ tableName }}"
+            bindinput="onTableNameInput"
+            placeholder="输入表名（如 furnace_data）"
+            maxlength="32"
+          />
+          <text class="config-row-hint">仅限字母、数字和下划线</text>
+        </view>
+      </view>
+
+      <!-- 导入模式 -->
+      <view class="config-row">
+        <text class="config-row-label">导入模式</text>
+        <view class="mode-tabs">
+          <view
+            class="mode-tab {{importMode === 'replace' ? 'mode-tab-active' : ''}}"
+            bindtap="setImportMode"
+            data-mode="replace"
+          >
+            <text class="mode-tab-icon">🔄</text>
+            <text class="mode-tab-label">覆盖</text>
+          </view>
+          <view
+            class="mode-tab {{importMode === 'append' ? 'mode-tab-active' : ''}}"
+            bindtap="setImportMode"
+            data-mode="append"
+          >
+            <text class="mode-tab-icon">➕</text>
+            <text class="mode-tab-label">追加</text>
+          </view>
+        </view>
+      </view>
+      <view class="config-mode-desc">
+        <text class="text-xs text-tertiary">
+          {{importMode === 'replace' ? '将清空已有数据并写入新数据，适合重新导入整张表' : '在现有数据末尾追加新行，适合分批次上传数据'}}
+        </text>
+      </view>
+    </view>
+
+    <!-- 解析按钮 -->
+    <button class="btn btn-primary btn-lg btn-block mt-4" bindtap="parseFile" disabled="{{ !selectedFile || parsing }}">
+      {{ parsing ? '⏳ 解析中...' : '▶ 开始解析' }}
+    </button>
+
+    <!-- 解析状态提示 -->
+    <view wx:if="{{ statusMessage }}" class="mb-4 mt-3 p-3 rounded-lg" style="background-color: {{ statusType === 'success' ? 'rgba(76,175,80,0.12)' : statusType === 'error' ? 'rgba(244,67,54,0.12)' : 'rgba(255,107,53,0.1)' }};">
+      <text style="color: {{ statusType === 'success' ? '#4CAF50' : statusType === 'error' ? '#F44336' : '#FF6B35' }};" class="text-normal">{{ statusMessage }}</text>
+    </view>
+
+    <!-- 数据预览区域 -->
+    <view wx:if="{{ parsedData && parsedData.data.length > 0 }}" class="mt-5">
+      <view class="flex justify-between items-center mb-4">
+        <text class="page-subtitle">数据预览</text>
+        <text class="text-small text-tertiary">共 {{ parsedData.data.length }} 行，{{ parsedData.headers.length }} 列</text>
+      </view>
+      
+      <!-- 数据表格 -->
+      <scroll-view scroll-x="true" scroll-y="true" class="bg-secondary rounded-lg p-3" style="max-height: 500rpx;">
+        <view class="border border-gray-300 rounded-lg overflow-hidden">
+          <!-- 表头 -->
+          <view class="flex bg-primary text-white font-medium p-2">
+            <view class="w-20 text-center min-w-[80rpx] flex-shrink-0" wx:if="{{ parsedData.headers[0] }}">
+              <text class="block">{{ parsedData.chineseHeaders[0] || parsedData.headers[0] }}</text>
+              <text class="text-xs opacity-75">{{ parsedData.headers[0] }}</text>
+            </view>
+            <view wx:for="{{ parsedData.headers }}" wx:key="index" wx:if="{{ index > 0 }}" class="flex-1 text-center min-w-[120rpx]" style="white-space: nowrap;">
+              <text class="block">{{ parsedData.chineseHeaders[index] || item }}</text>
+              <text class="text-xs opacity-75">{{ item }}</text>
+            </view>
+          </view>
+          
+          <!-- 数据行 -->
+          <view wx:for="{{ previewData }}" wx:key="index" class="flex border-t border-gray-300 p-2" style="background-color: {{ index % 2 === 0 ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)' }};">
+            <view class="w-20 text-center min-w-[80rpx] flex-shrink-0 border-r border-gray-200" wx:if="{{ parsedData.headers[0] }}">
+              {{ item[parsedData.headers[0]] }}
+            </view>
+            <view wx:for="{{ parsedData.headers }}" wx:for-item="header" wx:key="header" wx:if="{{ index > 0 }}" class="flex-1 text-center text-sm min-w-[120rpx]">
+              {{ item[header] }}
+            </view>
+          </view>
+        </view>
+        <view wx:if="{{ parsedData.data.length > 10 }}" class="mt-3 text-center text-small text-tertiary">
+          <text>仅显示前10行，共 {{ parsedData.data.length }} 行</text>
+        </view>
+      </scroll-view>
+      
+      <!-- 数据存储按钮 -->
+      <button class="btn btn-success btn-lg btn-block mt-4" bindtap="saveData" disabled="{{ saving }}">
+        {{ saving ? '⏳ 存储中...' : '💾 保存到数据库' }}
+      </button>
+    </view>
+  </view>
+
+  <!-- 加载动画 -->
+  <view class="loading-container" wx:if="{{ isLoading || parsing || saving }}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">
+      {{ isLoading ? '加载中...' : parsing ? '解析中...' : '存储中...' }}
+    </text>
+  </view>
+
+</view>

@@ -1,0 +1,17 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# AI agent work directories
+.agents/
+.trae/
+skills/
+
+# Temporary and generated files
+*.zip
+*.tmp
+*.log
+
+# Editor
+.idea/
+.vscode/
